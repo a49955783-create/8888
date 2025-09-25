@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم - مستشفى ريسبكت</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="actions">
+      <button onclick="showAddForm()">إضافة</button>
+      <button onclick="editItem()">تعديل</button>
+      <button onclick="deleteItem()">حذف</button>
+    </div>
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="بحث بالاسم أو رقم الهوية">
+    </div>
+    <div class="brand-wrap">
+      <span class="brand-title">مستشفى ريسبكت</span>
+      <img class="brand-logo" src="golden_logo.png" alt="شعار">
+    </div>
+  </nav>
+
+  <main>
+    <div id="cardsContainer" class="cards-container"></div>
+  </main>
+
+  <div id="addForm" class="modal hidden">
+    <div class="modal-content">
+      <h2>بيانات التأمين</h2>
+      <label>الصورة <input type="file" id="imageInput"></label><br>
+      <label>الاسم <input type="text" id="nameInput"></label><br>
+      <label>رقم الهوية <input type="text" id="idInput"></label><br>
+      <label>الفئة 
+        <select id="categoryInput">
+          <option>فني</option>
+          <option>طبي</option>
+          <option>إداري</option>
+          <option>متطوع</option>
+        </select>
+      </label><br>
+      <label>تاريخ للانتهاء <input type="date" id="expireInput"></label><br>
+      <button onclick="saveItem()">حفظ</button>
+      <button onclick="closeForm()">إلغاء</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
