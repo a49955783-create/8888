@@ -1,14 +1,9 @@
 function adminLogin(){
   const pass = prompt("أدخل كلمة السر:");
-  if(pass === "20025"){
-    window.location.href = "dashboard.html";
-  } else {
-    alert("كلمة السر غير صحيحة");
-  }
+  if(pass === "20025"){ window.location.href = "dashboard.html"; }
+  else{ alert("كلمة السر غير صحيحة"); }
 }
-function enterViewer(){
-  window.location.href = "viewer.html";
-}
+function enterViewer(){ window.location.href = "viewer.html"; }
 
 function showAddForm(){document.getElementById("addForm").classList.remove("hidden");}
 function closeForm(){document.getElementById("addForm").classList.add("hidden");}
@@ -29,7 +24,8 @@ function saveItem(){
     renderItems();
     closeForm();
   }
-  if(imageFile){reader.readAsDataURL(imageFile);} else {
+  if(imageFile){reader.readAsDataURL(imageFile);} 
+  else {
     const item = {name,id,category,expire,image:""};
     let items = JSON.parse(localStorage.getItem("insurance_items")||"[]");
     items.push(item);
@@ -39,22 +35,34 @@ function saveItem(){
   }
 }
 
+let currentTab="all";
+function filterTab(tab){ currentTab=tab; renderItems(); }
+
 function renderItems(){
   const container = document.getElementById("cardsContainer");
   if(!container) return;
   container.innerHTML="";
   let items = JSON.parse(localStorage.getItem("insurance_items")||"[]");
-  items.forEach((item,i)=>{
+  const q = document.getElementById("searchInput")?document.getElementById("searchInput").value.trim():"";
+  items.forEach(item=>{
+    const diff=new Date(item.expire)-new Date();
+    const expired=diff<=0;
+    let show=true;
+    if(currentTab!=="all"){
+      if(currentTab==="منتهي" && !expired) show=false;
+      else if(currentTab!=="منتهي" && item.category!==currentTab) show=false;
+    }
+    if(q && !(item.name.includes(q) || item.id.includes(q))) show=false;
+    if(!show) return;
     const card=document.createElement("div");
     card.className="card-item";
     const img=item.image?`<img src="${item.image}" alt="صورة">`:"";
-    const diff=new Date(item.expire)-new Date();
     let countdown;
-    if(diff>0){
+    if(!expired){
       const days=Math.ceil(diff/(1000*60*60*24));
-      countdown=`<div class='countdown'>باقي ${days} يوم</div>`;
+      countdown=`<div class='countdown active'>⏳ باقي ${days} يوم</div>`;
     } else {
-      countdown=`<div class='countdown expired'>تم انتهاء التأمين</div>`;
+      countdown=`<div class='countdown expired'>❌ انتهى — رجاء التجديد</div>`;
     }
     card.innerHTML=`${img}<h3>${item.name}</h3><p>${item.id}</p><p>${item.category}</p>${countdown}`;
     container.appendChild(card);
